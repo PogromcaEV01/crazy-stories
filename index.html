@@ -1,295 +1,417 @@
 <!DOCTYPE html>
-<html lang="pl" data-theme="light">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harry Potter - Anime Vibes</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-
+    <title>Nichijou Style - HP Archive (Editable)</title>
     <style>
-        /* --- KONFIGURACJA KOLORÓW (LIGHT & DARK) --- */
-        
-        /* Domyślny motyw jasny (Pastel School Day) */
-        :root {
-            --bg-color: #E0F7FA;        
-            --bg-pattern: #B2EBF2;
-            --container-bg: #FFFFFF;      
-            --sidebar-bg: #FFF9C4; 
-            --sidebar-border: #FFE082;
-            --text-main: #546E7A;
-            --text-header: #FBC02D;       
-            --tile-bg: #FFFFFF;
-            --tile-hover: #FFCDD2;     
-            --tile-active: #B3E5FC;
-            --accent-line: #FFCDD2;
-            --shadow: 0 10px 25px rgba(176, 190, 197, 0.3);
-        }
-
-        /* Motyw ciemny (Lofi Night Study) */
-        [data-theme="dark"] {
-            --bg-color: #1a1a2e;        /* Ciemny granat */
-            --bg-pattern: #16213e;      /* Ciemniejsze kropki */
-            --container-bg: #232338;    /* Ciemny fioletowy panel */
-            --sidebar-bg: #2b2b45;      /* Panel boczny */
-            --sidebar-border: #464660;
-            --text-main: #eaeaea;       /* Jasny tekst */
-            --text-header: #FFD54F;     /* Złoty nagłówek (świecący) */
-            --tile-bg: #343450;
-            --tile-hover: #e94560;      /* Neonowy róż */
-            --tile-active: #5333ed;     /* Neonowy fiolet */
-            --accent-line: #e94560;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
+        /* RESET */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            /* Płynne przejście kolorów przy zmianie motywu */
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
 
         body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: var(--bg-color);
-            /* Wzór w kropki */
-            background-image: radial-gradient(var(--bg-pattern) 2px, transparent 2px);
+            font-family: 'Verdana', 'Segoe UI', sans-serif;
+            background-color: #fffbef; 
+            background-image: 
+                linear-gradient(#e8e4d0 2px, transparent 2px),
+                linear-gradient(90deg, #e8e4d0 2px, transparent 2px);
             background-size: 30px 30px;
-            color: var(--text-main);
+            color: #444;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
+
+        /* --- TRYB CIEMNY --- */
+        body.dark-mode {
+            background-color: #222;
+            background-image: 
+                linear-gradient(#333 2px, transparent 2px),
+                linear-gradient(90deg, #333 2px, transparent 2px);
+            color: #eee;
+        }
+
+        body.dark-mode .container { border-color: #eee; }
+        body.dark-mode .sidebar { background-color: #2c3e50; border-right-color: #eee; }
+        body.dark-mode .sidebar::after { opacity: 0.1; }
+        body.dark-mode .tile { background-color: #333; color: #fff; border-color: #eee; }
+        
+        body.dark-mode .tile:hover {
+            background-color: #f39c12;
+            color: #222;
+            box-shadow: 5px 5px 0px #eee;
+        }
+
+        body.dark-mode .book-info {
+            background-color: #2d2d2d;
+            border-color: #eee;
+            box-shadow: 10px 10px 0px #555;
+        }
+        
+        body.dark-mode h1 { color: #ff8b94; }
+
+        /* Edycja w trybie ciemnym */
+        body.dark-mode .editable-content[contenteditable="true"] {
+            background-color: #444;
+            border-color: #ff8b94;
+            color: #fff;
+        }
+        /* ------------------- */
+
 
         .container {
             display: flex;
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
-            background: var(--container-bg);
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            height: 100%;
+            border: 8px solid #444; 
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #aecce8; 
+            border-right: 4px solid #444;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             position: relative;
         }
 
-        /* --- PRZYCISK TRYBU CIEMNEGO --- */
-        .theme-toggle-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: var(--tile-bg);
-            color: var(--text-main);
-            font-size: 1.2rem;
+        .sidebar h2 {
+            text-align: center;
+            background: #ff8b94; 
+            color: #fff;
+            padding: 15px;
+            border: 3px solid #444;
+            border-radius: 15px;
+            text-transform: uppercase;
+            font-weight: 900;
+            box-shadow: 4px 4px 0px #444;
+            z-index: 2;
+            transform: rotate(-2deg);
+            margin-bottom: 20px;
+        }
+
+        .theme-btn {
+            margin-top: auto;
+            padding: 10px;
+            border: 3px solid #444;
+            border-radius: 10px;
+            background-color: #ffeaa7;
+            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10; /* Żeby był nad innymi elementami */
+            z-index: 2;
+            box-shadow: 3px 3px 0px #444;
+            font-family: inherit;
         }
         
-        .theme-toggle-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 25%;
-            background-color: var(--sidebar-bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-            border-right: 2px dashed var(--sidebar-border);
-            position: relative; /* Dla pozycjonowania elementów wewnątrz */
-        }
-
-        .sidebar h2 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            margin-top: 30px; /* Miejsce na przycisk toggle */
-            color: var(--text-header);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-        }
+        .theme-btn:hover { transform: scale(1.05); background-color: #fdcb6e; }
 
         .tile {
-            width: 60px;
-            height: 60px;
-            background: var(--tile-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
+            background-color: #fff;
+            color: #444;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            color: var(--text-main);
+            border: 3px solid #444;
+            border-radius: 12px;
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 2;
+            position: relative;
+        }
+
+        .tile::before {
+            content: "#"; font-size: 0.8em; color: #ccc; position: absolute; left: 10px;
         }
 
         .tile:hover {
-            transform: scale(1.1) rotate(10deg);
-            background-color: var(--tile-hover);
-            color: white;
+            background-color: #ffdfba;
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.8);
         }
+
+        .tile:nth-child(even):hover { transform: scale(1.05) rotate(-2deg); }
 
         .tile.active {
-            background-color: var(--tile-active);
-            color: white;
-            transform: scale(1.2);
-            box-shadow: 0 0 15px var(--tile-active);
+            background-color: #ffb7b2;
+            color: #fff;
+            transform: translateX(10px);
+            box-shadow: 3px 3px 0px #444;
+            border-color: #444;
         }
 
-        /* --- TREŚĆ --- */
         .main-content {
-            width: 75%;
-            padding: 50px;
+            flex: 1;
+            padding: 40px;
             overflow-y: auto;
+            position: relative;
         }
 
         .book-info {
             display: none;
-            animation: fadeIn 0.6s ease-in-out;
+            background-color: #fff;
+            border: 4px solid #444;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 10px 10px 0px #aecce8;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .book-info.active-content {
-            display: block;
+        .book-info.active { display: block; }
+
+        h1 {
+            font-size: 2.5em;
+            color: #444;
+            margin-bottom: 20px;
+            text-decoration: underline wavy #ff8b94;
         }
 
-        .book-info h1 {
-            font-size: 2.5rem;
-            color: var(--tile-active); /* Używamy koloru aktywnego kafelka */
-            margin-bottom: 10px;
-            border-bottom: 4px solid var(--accent-line);
-            display: inline-block;
+        /* --- STYLIZACJA EDYTOWALNEGO TEKSTU --- */
+        .editable-content {
+            padding: 10px;
+            border: 2px solid transparent; /* Domyślnie brak ramki */
+            border-radius: 10px;
+            outline: none;
         }
 
-        .book-info h3 {
-            color: var(--text-main);
-            opacity: 0.7;
-            margin-bottom: 30px;
-            font-style: italic;
+        /* Wygląd podczas edycji */
+        .editable-content[contenteditable="true"] {
+            border: 2px dashed #ff8b94;
+            background-color: #fffbef;
+            cursor: text;
         }
 
-        .book-info p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            text-align: justify;
+        .btn-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .action-btn {
+            padding: 8px 20px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #444;
+            font-family: inherit;
+            transition: all 0.2s;
         }
 
-        @media (max-width: 768px) {
-            .container { flex-direction: column; height: 95vh; }
-            .sidebar { width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 2px dashed var(--sidebar-border); padding-top: 60px;}
-            .main-content { width: 100%; }
-            .theme-toggle-btn { top: 10px; left: 10px; }
-            .sidebar h2 { width: 100%; margin-top: 0;}
+        .btn-edit { background-color: #81ecec; }
+        .btn-edit:hover { background-color: #4bcffa; transform: translateY(-2px); }
+
+        .btn-save { background-color: #55efc4; display: none; } /* Domyślnie ukryty */
+        .btn-save:hover { background-color: #00b894; transform: translateY(-2px); }
+
+        .book-info::before {
+            content: ""; display: block; width: 150px; height: 30px;
+            background-color: rgba(255, 223, 186, 0.8);
+            position: absolute; top: -15px; left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            z-index: 5;
         }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
     </style>
 </head>
-<body>
-
-    <div class="container">
-        
-        <nav class="sidebar">
-            <button class="theme-toggle-btn" onclick="toggleTheme()" title="Przełącz tryb ciemny">
-                🌙
-            </button>
-
-            <h2>Wybierz Tom</h2>
-            <div class="tile active" onclick="showBook(1)">1</div>
-            <div class="tile" onclick="showBook(2)">2</div>
-            <div class="tile" onclick="showBook(3)">3</div>
-            <div class="tile" onclick="showBook(4)">4</div>
-            <div class="tile" onclick="showBook(5)">5</div>
-        </nav>
+<body onload="loadSavedData()"> <div class="container">
+        <aside class="sidebar">
+            <h2>Nichijou<br>Library</h2>
+            <div class="tile" onclick="showBook(1)">Część 1</div>
+            <div class="tile" onclick="showBook(2)">Część 2</div>
+            <div class="tile" onclick="showBook(3)">Część 3</div>
+            <div class="tile" onclick="showBook(4)">Część 4</div>
+            <div class="tile" onclick="showBook(5)">Część 5</div>
+            <button class="theme-btn" onclick="toggleTheme()">Przełącz Tryb 🌙</button>
+        </aside>
 
         <main class="main-content">
             
-            <div id="book-1" class="book-info active-content">
+            <div id="book-0" class="book-info active">
+                <h1>Witaj w Notatniku</h1>
+                <p>To jest archiwum Harry'ego Pottera.</p>
+                <p>Możesz teraz <b>edytować</b> opisy książek. Kliknij przycisk "Edytuj tekst", zmień treść, a potem "Zapisz zmiany".</p>
+                <p>Nawet jeśli odświeżysz stronę, Twoje notatki zostaną!</p>
+            </div>
+
+            <div id="book-1" class="book-info">
                 <h1>Kamień Filozoficzny</h1>
-                <h3>Rok pierwszy</h3>
-                <p>Harry Potter, sierota wychowywany przez surowe wujostwo, dowiaduje się, że jest czarodziejem. Trafia do Hogwartu, gdzie poznaje Rona i Hermionę.</p>
-                <p>Wspólnie odkrywają tajemnicę Kamienia Filozoficznego i stawiają czoła cieniowi Voldemorta. To początek magicznej legendy.</p>
+                <div id="content-1" class="editable-content">
+                    <p>Harry Potter i Kamień Filozoficzny to pierwsza część sagi. Poznajemy Harry'ego jako sierotę mieszkającego w komórce pod schodami.</p>
+                    <p>W Hogwarcie Harry zaprzyjaźnia się z Ronem i Hermioną. Wspólnie odkrywają tajemnicę ukrytą na trzecim piętrze szkoły.</p>
+                </div>
+                <div class="btn-controls">
+                    <button class="action-btn btn-edit" onclick="enableEdit(1)">✏️ Edytuj tekst</button>
+                    <button class="action-btn btn-save" onclick="saveEdit(1)">💾 Zapisz zmiany</button>
+                </div>
             </div>
 
             <div id="book-2" class="book-info">
                 <h1>Komnata Tajemnic</h1>
-                <h3>Rok drugi</h3>
-                <p>Tajemnicze ataki na uczniów paraliżują szkołę. Krwawy napis na ścianie głosi powrót Dziedzica Slytherina.</p>
-                <p>Harry, słyszący głosy bazyliszka, musi zejść do podziemi, by ocalić szkołę przed zamknięciem i zmierzyć się ze wspomnieniem Toma Riddle'a.</p>
+                <div id="content-2" class="editable-content">
+                    <p>W drugiej części Harry wraca do Hogwartu mimo ostrzeżeń Zgredka. W szkole dochodzi do serii tajemniczych ataków.</p>
+                    <p>Harry odkrywa w sobie rzadką umiejętność rozmowy z wężami, co rzuca na niego cień podejrzeń.</p>
+                </div>
+                <div class="btn-controls">
+                    <button class="action-btn btn-edit" onclick="enableEdit(2)">✏️ Edytuj tekst</button>
+                    <button class="action-btn btn-save" onclick="saveEdit(2)">💾 Zapisz zmiany</button>
+                </div>
             </div>
 
             <div id="book-3" class="book-info">
                 <h1>Więzień Azkabanu</h1>
-                <h3>Rok trzeci</h3>
-                <p>Syriusz Black ucieka z Azkabanu. Hogwart jest otoczony przez przerażających Dementorów.</p>
-                <p>Harry poznaje prawdę o swoich rodzicach, uczy się zaklęcia Patronusa i odkrywa, że granica między dobrem a złem nie zawsze jest jasna.</p>
+                <div id="content-3" class="editable-content">
+                    <p>Z Azkabanu ucieka Syriusz Black. Szkoła zostaje otoczona przez Dementorów.</p>
+                    <p>To jedna z mroczniejszych części, w której Harry poznaje prawdę o przeszłości swojego ojca.</p>
+                </div>
+                <div class="btn-controls">
+                    <button class="action-btn btn-edit" onclick="enableEdit(3)">✏️ Edytuj tekst</button>
+                    <button class="action-btn btn-save" onclick="saveEdit(3)">💾 Zapisz zmiany</button>
+                </div>
             </div>
 
             <div id="book-4" class="book-info">
                 <h1>Czara Ognia</h1>
-                <h3>Rok czwarty</h3>
-                <p>Turniej Trójmagiczny przyciąga uwagę całego świata. Harry wbrew własnej woli zostaje czwartym uczestnikiem.</p>
-                <p>Zmagania ze smokami to tylko wstęp do koszmaru, który czeka na cmentarzu, gdzie Lord Voldemort odzyskuje ciało.</p>
+                <div id="content-4" class="editable-content">
+                    <p>W Hogwarcie odbywa się Turniej Trójmagiczny. Tajemnicza ręka wrzuca nazwisko Harry'ego do Czary Ognia.</p>
+                    <p>Książka kończy się tragicznym powrotem Lorda Voldemorta.</p>
+                </div>
+                <div class="btn-controls">
+                    <button class="action-btn btn-edit" onclick="enableEdit(4)">✏️ Edytuj tekst</button>
+                    <button class="action-btn btn-save" onclick="saveEdit(4)">💾 Zapisz zmiany</button>
+                </div>
             </div>
 
             <div id="book-5" class="book-info">
                 <h1>Zakon Feniksa</h1>
-                <h3>Rok piąty</h3>
-                <p>Świat magii wypiera powrót Czarnego Pana. W szkole rządy obejmuje okrutna Dolores Umbridge.</p>
-                <p>Harry zakłada Gwardię Dumbledore'a, by walczyć. Czeka go trudna lekcja o poświęceniu w Departamencie Tajemnic.</p>
+                <div id="content-5" class="editable-content">
+                    <p>Ministerstwo Magii wprowadza do szkoły Dolores Umbridge. Harry zakłada Gwardię Dumbledore'a.</p>
+                    <p>Bohaterowie muszą zmierzyć się z nagonką medialną i biurokracją.</p>
+                </div>
+                <div class="btn-controls">
+                    <button class="action-btn btn-edit" onclick="enableEdit(5)">✏️ Edytuj tekst</button>
+                    <button class="action-btn btn-save" onclick="saveEdit(5)">💾 Zapisz zmiany</button>
+                </div>
             </div>
 
         </main>
     </div>
 
     <script>
-        // Funkcja obsługi kafelków (taka sama jak wcześniej)
+        // --- 1. FUNKCJA PRZEŁĄCZANIA KAFELKÓW ---
         function showBook(number) {
-            const allTiles = document.querySelectorAll('.tile');
-            allTiles.forEach(tile => tile.classList.remove('active'));
-            allTiles[number - 1].classList.add('active');
-
+            // Ukryj wszystkie książki i wyłącz ewentualną edycję
             const allBooks = document.querySelectorAll('.book-info');
-            allBooks.forEach(book => book.classList.remove('active-content'));
+            allBooks.forEach(book => {
+                book.classList.remove('active');
+                // Jeśli użytkownik zmienił kartę podczas edycji, wyłącz edycję wizualnie
+                const content = book.querySelector('.editable-content');
+                if(content) content.contentEditable = "false";
+                const saveBtn = book.querySelector('.btn-save');
+                const editBtn = book.querySelector('.btn-edit');
+                if(saveBtn) { saveBtn.style.display = 'none'; }
+                if(editBtn) { editBtn.style.display = 'inline-block'; }
+            });
+
+            const allTiles = document.querySelectorAll('.tile');
+            allTiles.forEach(tile => {
+                tile.classList.remove('active');
+            });
 
             const selectedBook = document.getElementById('book-' + number);
-            selectedBook.classList.add('active-content');
-        }
+            if (selectedBook) {
+                selectedBook.classList.add('active');
+            }
 
-        // NOWOŚĆ: Funkcja obsługi trybu ciemnego
-        function toggleTheme() {
-            const htmlElement = document.documentElement; // Pobieramy znacznik <html>
-            const button = document.querySelector('.theme-toggle-btn');
-            
-            // Sprawdzamy, jaki jest aktualny motyw
-            if (htmlElement.getAttribute('data-theme') === 'dark') {
-                // Przełączamy na jasny
-                htmlElement.setAttribute('data-theme', 'light');
-                button.innerHTML = '🌙'; // Ikona księżyca
-            } else {
-                // Przełączamy na ciemny
-                htmlElement.setAttribute('data-theme', 'dark');
-                button.innerHTML = '☀️'; // Ikona słońca
+            if (number > 0) {
+                 allTiles[number - 1].classList.add('active');
             }
         }
+
+        // --- 2. TRYB CIEMNY ---
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-btn');
+            
+            // Zapisujemy preferencję motywu też!
+            if (body.classList.contains('dark-mode')) {
+                btn.innerHTML = "Tryb Dzienny ☀️";
+                localStorage.setItem('theme', 'dark');
+            } else {
+                btn.innerHTML = "Tryb Nocny 🌙";
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // --- 3. SYSTEM NOTATNIKA (EDYCJA I ZAPIS) ---
+
+        // Funkcja włączająca edycję
+        function enableEdit(id) {
+            const contentDiv = document.getElementById('content-' + id);
+            const parentBook = document.getElementById('book-' + id);
+            
+            // Włączamy edytowalność
+            contentDiv.contentEditable = "true";
+            contentDiv.focus(); // Ustawiamy kursor w tekście
+            
+            // Podmieniamy przyciski
+            parentBook.querySelector('.btn-edit').style.display = 'none';
+            parentBook.querySelector('.btn-save').style.display = 'inline-block';
+        }
+
+        // Funkcja zapisująca zmiany
+        function saveEdit(id) {
+            const contentDiv = document.getElementById('content-' + id);
+            const parentBook = document.getElementById('book-' + id);
+
+            // Wyłączamy edytowalność
+            contentDiv.contentEditable = "false";
+
+            // ZAPISUJEMY DO PAMIĘCI PRZEGLĄDARKI (LocalStorage)
+            // Klucz np. "book-1-data"
+            localStorage.setItem('book-' + id + '-data', contentDiv.innerHTML);
+
+            // Przywracamy przyciski
+            parentBook.querySelector('.btn-edit').style.display = 'inline-block';
+            parentBook.querySelector('.btn-save').style.display = 'none';
+
+            alert("Zapisano notatki do pamięci przeglądarki! (◕‿◕)");
+        }
+
+        // Funkcja ładująca dane przy starcie strony
+        function loadSavedData() {
+            // 1. Ładowanie tekstów książek
+            for (let i = 1; i <= 5; i++) {
+                const savedData = localStorage.getItem('book-' + i + '-data');
+                if (savedData) {
+                    const contentDiv = document.getElementById('content-' + i);
+                    if(contentDiv) {
+                        contentDiv.innerHTML = savedData;
+                    }
+                }
+            }
+
+            // 2. Ładowanie motywu (żeby pamiętał czy był ciemny)
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                toggleTheme(); // Włączamy ciemny, jeśli taki był zapisany
+            }
+        }
+
     </script>
 
 </body>
